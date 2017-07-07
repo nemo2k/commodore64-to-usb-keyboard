@@ -61,6 +61,15 @@ void loop() {
 
 	char mod = 0;
 
+	// Check if RunStop is pressed for alt
+	pinMode(SENDERS[0].gpio, OUTPUT);
+	digitalWrite(SENDERS[0].gpio, LOW);
+	if(digitalRead(C64[3].gpio) == LOW) {
+		mod = 0x04;
+	}
+	digitalWrite(SENDERS[0].gpio, HIGH);
+	pinMode(SENDERS[0].gpio, INPUT);
+
 	// Check if C= is pressed for control, ctrl on c64 is remapped to tab
 	pinMode(SENDERS[0].gpio, OUTPUT);
 	digitalWrite(SENDERS[0].gpio, LOW);
