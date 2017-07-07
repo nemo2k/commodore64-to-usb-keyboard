@@ -65,7 +65,7 @@ void loop() {
 	pinMode(SENDERS[0].gpio, OUTPUT);
 	digitalWrite(SENDERS[0].gpio, LOW);
 	if(digitalRead(C64[3].gpio) == LOW) {
-		mod = 0x04;
+		mod += 0x04;
 	}
 	digitalWrite(SENDERS[0].gpio, HIGH);
 	pinMode(SENDERS[0].gpio, INPUT);
@@ -74,7 +74,7 @@ void loop() {
 	pinMode(SENDERS[0].gpio, OUTPUT);
 	digitalWrite(SENDERS[0].gpio, LOW);
 	if(digitalRead(C64[5].gpio) == LOW) {
-		mod = 0x01;
+		mod += 0x01;
 	}
 	digitalWrite(SENDERS[0].gpio, HIGH);
 	pinMode(SENDERS[0].gpio, INPUT);
@@ -83,7 +83,7 @@ void loop() {
 	pinMode(SENDERS[1].gpio, OUTPUT);
 	digitalWrite(SENDERS[1].gpio, LOW);
 	if(digitalRead(C64[3].gpio) == LOW) {
-		mod = 0x02;
+		mod += 0x02;
 	}
 	digitalWrite(SENDERS[1].gpio, HIGH);
 	pinMode(SENDERS[1].gpio, INPUT);
@@ -92,7 +92,7 @@ void loop() {
 	pinMode(SENDERS[6].gpio, OUTPUT);
 	digitalWrite(SENDERS[6].gpio, LOW);
 	if(digitalRead(C64[4].gpio) == LOW) {
-		mod = 0x40;
+		mod += 0x40;
 	}
 	digitalWrite(SENDERS[6].gpio, HIGH);
 	pinMode(SENDERS[6].gpio, INPUT);
