@@ -33,6 +33,9 @@ struct SENDERS
 		{11}
 };
 
+byte RESTORE_S = 13;
+byte RESTORE_R = 10;
+
 unsigned long debouncer[64];
 boolean laststate[64];
 boolean state[64];
@@ -48,11 +51,12 @@ void setup()
 		pinMode(C64[x].gpio, INPUT_PULLUP);
 	}
 
-	TrinketKeyboard.begin();
+	// Manage Restore Key
+	pinMode(RESTORE_S, INPUT);
+	pinMode(RESTORE_R, INPUT_PULLUP);
 
-	// Turn on C64 red led
-	pinMode(10, OUTPUT);
-	digitalWrite(10, HIGH);
+
+	TrinketKeyboard.begin();
 }
 
 void loop() {
@@ -60,6 +64,14 @@ void loop() {
 	unsigned long t = millis(); // Prevent multiple calls to millis() in loop
 
 	char mod = 0;
+
+	pinMode(RESTORE_S, OUTPUT);
+	digitalWrite(RESTORE_S, LOW);
+	if(digitalRead(RESTORE_R) == LOW) {
+		TrinketKeyboard.print("RESTORE");
+	}
+	digitalWrite(RESTORE_S, HIGH);
+	pinMode(RESTORE_S, INPUT);
 
 	// Check if RunStop is pressed for alt
 	pinMode(SENDERS[0].gpio, OUTPUT);
@@ -109,17 +121,13 @@ void loop() {
 				debouncer[(y*8)+x] = t;
 			}
 
-			if(t - debouncer[(y*8)+x] > 10) {
+			if(t - debouncer[(y*8)+x] > 30) {
 				if(laststate[(y*8)+x] != state[(y*8)+x]) {
 					state[(y*8)+x] = laststate[(y*8)+x];
 					if(state[(y*8)+x]) {
 						TrinketKeyboard.pressKey(0,0);
-					} else {
-						if(mod == 0) {
-			        		TrinketKeyboard.pressKey(keymapmodifiers[(y*8)+x], keymap[(y*8)+x]);
-						} else {
-			                TrinketKeyboard.pressKey(mod, keymap[(y*8)+x]);
-						}
+  					} else {
+  			                    TrinketKeyboard.pressKey(mod, keymap[(y*8)+x]);
 					}
 				}
 			}
