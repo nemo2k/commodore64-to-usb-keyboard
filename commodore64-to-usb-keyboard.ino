@@ -64,51 +64,16 @@ void loop() {
 	unsigned long t = millis(); // Prevent multiple calls to millis() in loop
 
 	char mod = 0;
-
-	pinMode(RESTORE_S, OUTPUT);
-	digitalWrite(RESTORE_S, LOW);
-	if(digitalRead(RESTORE_R) == LOW) {
-		TrinketKeyboard.print("RESTORE");
-	}
-	digitalWrite(RESTORE_S, HIGH);
-	pinMode(RESTORE_S, INPUT);
-
+	// Check if Restore is pressed
+	mod += checkForModifier(RESTORE_S, RESTORE_R, 0);
 	// Check if RunStop is pressed for alt
-	pinMode(SENDERS[0].gpio, OUTPUT);
-	digitalWrite(SENDERS[0].gpio, LOW);
-	if(digitalRead(C64[3].gpio) == LOW) {
-		mod += 0x04;
-	}
-	digitalWrite(SENDERS[0].gpio, HIGH);
-	pinMode(SENDERS[0].gpio, INPUT);
-
+	mod += checkForModifier(SENDERS[0].gpio, C64[3].gpio, 0x04);
 	// Check if C= is pressed for control, ctrl on c64 is remapped to tab
-	pinMode(SENDERS[0].gpio, OUTPUT);
-	digitalWrite(SENDERS[0].gpio, LOW);
-	if(digitalRead(C64[5].gpio) == LOW) {
-		mod += 0x01;
-	}
-	digitalWrite(SENDERS[0].gpio, HIGH);
-	pinMode(SENDERS[0].gpio, INPUT);
-
+	mod += checkForModifier(SENDERS[0].gpio, C64[5].gpio, 0x01);
 	// Check if left shift is pressed for shift
-	pinMode(SENDERS[1].gpio, OUTPUT);
-	digitalWrite(SENDERS[1].gpio, LOW);
-	if(digitalRead(C64[3].gpio) == LOW) {
-		mod += 0x02;
-	}
-	digitalWrite(SENDERS[1].gpio, HIGH);
-	pinMode(SENDERS[1].gpio, INPUT);
-
+	mod += checkForModifier(SENDERS[1].gpio, C64[3].gpio, 0x02);
 	// Check if right shift is pressed for alt gr
-	pinMode(SENDERS[6].gpio, OUTPUT);
-	digitalWrite(SENDERS[6].gpio, LOW);
-	if(digitalRead(C64[4].gpio) == LOW) {
-		mod += 0x40;
-	}
-	digitalWrite(SENDERS[6].gpio, HIGH);
-	pinMode(SENDERS[6].gpio, INPUT);
-
+	mod += checkForModifier(SENDERS[6].gpio, C64[4].gpio, 0x40);
 
 	for(byte y = 0; y < AXISESY; y++) {
 		pinMode(SENDERS[y].gpio, OUTPUT);
@@ -121,7 +86,7 @@ void loop() {
 				debouncer[(y*8)+x] = t;
 			}
 
-			if(t - debouncer[(y*8)+x] > 30) {
+			if(t - debouncer[(y*8)+x] > 10) {
 				if(laststate[(y*8)+x] != state[(y*8)+x]) {
 					state[(y*8)+x] = laststate[(y*8)+x];
 					if(state[(y*8)+x]) {
@@ -136,4 +101,16 @@ void loop() {
 		digitalWrite(SENDERS[y].gpio, HIGH);
 		pinMode(SENDERS[y].gpio, INPUT);
 	}
+}
+
+char checkForModifier(byte sender, byte receiver, char modifier) {
+	char mod = 0;
+	pinMode(sender, OUTPUT);
+	digitalWrite(sender, LOW);
+	if(digitalRead(receiver) == LOW) {
+		mod = modifier;
+	}
+	digitalWrite(sender, HIGH);
+	pinMode(sender, INPUT);
+	return mod;
 }
