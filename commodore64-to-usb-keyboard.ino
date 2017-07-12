@@ -64,16 +64,19 @@ void loop() {
 	unsigned long t = millis(); // Prevent multiple calls to millis() in loop
 
 	char mod = 0;
-	// Check if Restore is pressed
-	mod += checkForModifier(RESTORE_S, RESTORE_R, 0);
+	byte smod = 0;
+	// Check if C= is pressed for special modifier
+	smod += checkForModifier(SENDERS[0].gpio, C64[5].gpio, 1);
+	// Check if Restore is pressed for right alt
+	mod += checkForModifier(RESTORE_S, RESTORE_R, KEYCODE_MOD_RIGHT_ALT);
 	// Check if RunStop is pressed for alt
-	mod += checkForModifier(SENDERS[0].gpio, C64[3].gpio, 0x04);
-	// Check if C= is pressed for control, ctrl on c64 is remapped to tab
-	mod += checkForModifier(SENDERS[0].gpio, C64[5].gpio, 0x01);
+	mod += checkForModifier(SENDERS[0].gpio, C64[3].gpio, KEYCODE_MOD_LEFT_ALT);
+    // Control
+	mod += checkForModifier(SENDERS[0].gpio, C64[2].gpio, KEYCODE_MOD_LEFT_CONTROL);
 	// Check if left shift is pressed for shift
-	mod += checkForModifier(SENDERS[1].gpio, C64[3].gpio, 0x02);
-	// Check if right shift is pressed for alt gr
-	mod += checkForModifier(SENDERS[6].gpio, C64[4].gpio, 0x40);
+	mod += checkForModifier(SENDERS[1].gpio, C64[3].gpio, KEYCODE_MOD_LEFT_SHIFT);
+	// Check if right shift is pressed for shift
+	mod += checkForModifier(SENDERS[6].gpio, C64[4].gpio, KEYCODE_MOD_RIGHT_SHIFT);
 
 	for(byte y = 0; y < AXISESY; y++) {
 		pinMode(SENDERS[y].gpio, OUTPUT);
@@ -92,7 +95,9 @@ void loop() {
 					if(state[(y*8)+x]) {
 						TrinketKeyboard.pressKey(0,0);
   					} else {
-  			                    TrinketKeyboard.pressKey(mod, keymap[(y*8)+x]);
+  						int key = keymap[(y*8)+x];
+  						if ( smod > 0 ) { key = keymapmodifiers[(y*8)+x]; }
+  			            TrinketKeyboard.pressKey(mod, key);
 					}
 				}
 			}
