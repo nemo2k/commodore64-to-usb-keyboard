@@ -78,11 +78,12 @@ void loop() {
 	// Check if right shift is pressed for shift
 	mod += checkForModifier(SENDERS[6].gpio, C64[4].gpio, KEYCODE_MOD_RIGHT_SHIFT);
 
-	for(byte y = 0; y < AXISESY; y++) {
+	boolean keypressed = false;
+	for(byte y = 0; y < AXISESY && !keypressed; y++) {
 		pinMode(SENDERS[y].gpio, OUTPUT);
 		digitalWrite(SENDERS[y].gpio, LOW);
 
-		for(byte x = 0; x < AXISESX; x++) {
+		for(byte x = 0; x < AXISESX && !keypressed; x++) {
 			boolean gpiostate = digitalRead(C64[x].gpio);
 
 			if(gpiostate != laststate[(y*8)+x]) {
@@ -96,8 +97,11 @@ void loop() {
 						TrinketKeyboard.pressKey(0,0);
   					} else {
   						int key = keymap[(y*8)+x];
-  						if ( smod > 0 ) { key = keymapmodifiers[(y*8)+x]; }
+  						if ( smod > 0 ) { 
+  							key = keymapmodifiers[(y*8)+x];
+  						}
   			            TrinketKeyboard.pressKey(mod, key);
+  			            keypressed = true;
 					}
 				}
 			}
