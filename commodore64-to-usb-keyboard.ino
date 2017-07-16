@@ -64,9 +64,9 @@ void loop() {
 	unsigned long t = millis(); // Prevent multiple calls to millis() in loop
 
 	char mod = 0;
-	byte smod = 0;
+	uint8_t cmod = 0;
 	// Check if C= is pressed for special modifier
-	smod += checkForModifier(SENDERS[0].gpio, C64[5].gpio, 1);
+	cmod = checkForModifier(SENDERS[0].gpio, C64[5].gpio, COMMODORE_MODIFIER);
 	// Check if Restore is pressed for right alt
 	mod += checkForModifier(RESTORE_S, RESTORE_R, KEYCODE_MOD_RIGHT_ALT);
 	// Check if RunStop is pressed for alt
@@ -96,10 +96,7 @@ void loop() {
 					if(state[(y*8)+x]) {
 						TrinketKeyboard.pressKey(0,0);
   					} else {
-  						int key = keymap[(y*8)+x];
-  						if ( smod > 0 ) { 
-  							key = keymapmodifiers[(y*8)+x];
-  						}
+  						int key = c64keys[cmod][(y*8)+x];
   			            TrinketKeyboard.pressKey(mod, key);
   			            keypressed = true;
 					}
