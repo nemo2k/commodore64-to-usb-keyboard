@@ -33,15 +33,15 @@ struct SENDERS
 		{11}
 };
 
-byte RESTORE_S = 13;
-byte RESTORE_R = 10;
+byte RESTORE_SENDER = 13;
+byte RESTORE_RECEIVER = 10;
 
 unsigned long debouncer[64];
 boolean laststate[64];
 boolean state[64];
 
 
-void setup() 
+void setup()
 {
 	for(byte y = 0; y < AXISESY; y++) {
 		pinMode(SENDERS[y].gpio, INPUT);
@@ -52,8 +52,8 @@ void setup()
 	}
 
 	// Manage Restore Key
-	pinMode(RESTORE_S, INPUT);
-	pinMode(RESTORE_R, INPUT_PULLUP);
+	pinMode(RESTORE_SENDER, INPUT);
+	pinMode(RESTORE_RECEIVER, INPUT_PULLUP);
 
 
 	TrinketKeyboard.begin();
@@ -68,7 +68,7 @@ void loop() {
 	// Check if C= is pressed for special modifier
 	cmod = checkForModifier(SENDERS[0].gpio, C64[5].gpio, COMMODORE_MODIFIER);
 	// Check if Restore is pressed for right alt
-	mod += checkForModifier(RESTORE_S, RESTORE_R, KEYCODE_MOD_RIGHT_ALT);
+	mod += checkForModifier(RESTORE_SENDER, RESTORE_RECEIVER, KEYCODE_MOD_RIGHT_ALT);
 	// Check if RunStop is pressed for alt
 	mod += checkForModifier(SENDERS[0].gpio, C64[3].gpio, KEYCODE_MOD_LEFT_ALT);
     // Control
