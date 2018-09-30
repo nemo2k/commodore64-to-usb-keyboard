@@ -66,13 +66,13 @@ void loop() {
 	char mod = 0;
 	uint8_t cmod = 0;
 	// Check if C= is pressed for special modifier
-	cmod = checkForModifier(SENDERS[0].gpio, C64[5].gpio, COMMODORE_MODIFIER);
+	cmod = checkForModifier(SENDERS[7].gpio, C64[7].gpio, SPECIAL_MODIFIER);
 	// Check if Restore is pressed for right alt
 	mod += checkForModifier(RESTORE_SENDER, RESTORE_RECEIVER, KEYCODE_MOD_RIGHT_ALT);
 	// Check if RunStop is pressed for alt
 	mod += checkForModifier(SENDERS[0].gpio, C64[3].gpio, KEYCODE_MOD_LEFT_ALT);
-    // Control
-	mod += checkForModifier(SENDERS[0].gpio, C64[2].gpio, KEYCODE_MOD_LEFT_CONTROL);
+    // Control mapped to commodore key
+	mod += checkForModifier(SENDERS[0].gpio, C64[5].gpio, KEYCODE_MOD_LEFT_CONTROL);
 	// Check if left shift is pressed for shift
 	mod += checkForModifier(SENDERS[1].gpio, C64[3].gpio, KEYCODE_MOD_LEFT_SHIFT);
 	// Check if right shift is pressed for shift
